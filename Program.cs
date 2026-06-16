@@ -6,6 +6,7 @@ using PMS.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+const string AngularDevelopmentCorsPolicy = "AngularDevelopment";
 
 builder.Services.AddDbContext<PmsDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -20,6 +21,15 @@ builder.Services.AddScoped<IQuestionnaireService, QuestionnaireService>();
 builder.Services.AddScoped<IQuestionResponseService, QuestionResponseService>();
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(AngularDevelopmentCorsPolicy, policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "http://127.0.0.1:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -33,6 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(AngularDevelopmentCorsPolicy);
 app.UseAuthorization();
 
 app.MapControllers();
