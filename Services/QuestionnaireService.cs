@@ -7,8 +7,7 @@ using PMS.Models.Responses;
 namespace PMS.Services;
 
 public class QuestionnaireService(
-    PmsDbContext dbContext,
-    QuestionnaireResponseFactory responseFactory) : IQuestionnaireService
+    PmsDbContext dbContext) : IQuestionnaireService
 {
     public async Task<IReadOnlyList<QuestionnaireDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
@@ -17,13 +16,13 @@ public class QuestionnaireService(
             .OrderBy(questionnaire => questionnaire.Title)
             .ToListAsync(cancellationToken);
 
-        return [.. questionnaires.Select(responseFactory.ToResponse)];
+        return [.. questionnaires.Select(DtoMapper.ToDto)];
     }
 
     public async Task<QuestionnaireDto?> GetByIdAsync(int questionnaireId, CancellationToken cancellationToken = default)
     {
         var questionnaire = await GetQuestionnaireAsync(questionnaireId, true, cancellationToken);
-        return questionnaire is null ? null : responseFactory.ToResponse(questionnaire);
+        return questionnaire is null ? null : DtoMapper.ToDto(questionnaire);
     }
 
     private IQueryable<Questionnaire> GetQuestionnairesQuery()

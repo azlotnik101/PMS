@@ -64,7 +64,7 @@ public class QuestionResponseService(PmsDbContext dbContext) : IQuestionResponse
             .OrderBy(response => response.QuestionId)
             .ToListAsync(cancellationToken);
 
-        return [.. responses.Select(ToResponse)];
+        return [.. responses.Select(DtoMapper.ToDto)];
     }
 
     private async Task<QuestionAnswerDto?> GetByIdAsync(int questionResponseId, CancellationToken cancellationToken)
@@ -73,30 +73,6 @@ public class QuestionResponseService(PmsDbContext dbContext) : IQuestionResponse
             .AsNoTracking()
             .FirstOrDefaultAsync(response => response.QuestionResponseId == questionResponseId, cancellationToken);
 
-        return response is null ? null : ToResponse(response);
-    }
-
-    private static QuestionAnswerDto ToResponse(QuestionResponse response)
-    {
-        return new QuestionAnswerDto
-        {
-            QuestionResponseId = response.QuestionResponseId,
-            QuestionnaireAssignmentId = response.QuestionnaireAssignmentId,
-            QuestionId = response.QuestionId,
-            TextValue = response.TextValue,
-            NumericValue = response.NumericValue,
-            AnsweredDate = response.AnsweredDate,
-            SelectedQuestionChoiceIds = ToSelectedQuestionChoiceIds(response.SelectedChoiceIds)
-        };
-    }
-
-    private static List<int> ToSelectedQuestionChoiceIds(string? selectedChoiceIds)
-    {
-        if (string.IsNullOrWhiteSpace(selectedChoiceIds))
-        {
-            return [];
-        }
-
-        return JsonSerializer.Deserialize<List<int>>(selectedChoiceIds) ?? [];
+        return response is null ? null : DtoMapper.ToDto(response);
     }
 }

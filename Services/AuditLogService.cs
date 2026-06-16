@@ -15,7 +15,7 @@ public class AuditLogService(PmsDbContext dbContext) : IAuditLogService
             .OrderByDescending(auditLog => auditLog.CreatedDate)
             .ToListAsync(cancellationToken);
 
-        return [.. auditLogs.Select(ToResponse)];
+        return [.. auditLogs.Select(DtoMapper.ToDto)];
     }
 
     public async Task WriteAsync(string entityName, int entityId, string action, string? details = null, CancellationToken cancellationToken = default)
@@ -32,16 +32,4 @@ public class AuditLogService(PmsDbContext dbContext) : IAuditLogService
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    private static AuditLogDto ToResponse(AuditLog auditLog)
-    {
-        return new AuditLogDto
-        {
-            AuditLogId = auditLog.AuditLogId,
-            EntityName = auditLog.EntityName,
-            EntityId = auditLog.EntityId,
-            Action = auditLog.Action,
-            Details = auditLog.Details,
-            CreatedDate = auditLog.CreatedDate
-        };
-    }
 }

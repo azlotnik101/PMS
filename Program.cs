@@ -13,7 +13,6 @@ builder.Services.AddDbContext<PmsDbContext>(options =>
 
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IParticipantService, ParticipantService>();
-builder.Services.AddScoped<QuestionnaireResponseFactory>();
 builder.Services.AddScoped<IQuestionnaireAssignmentService, QuestionnaireAssignmentService>();
 builder.Services.AddScoped<IQuestionnaireService, QuestionnaireService>();
 builder.Services.AddScoped<IQuestionResponseService, QuestionResponseService>();

@@ -17,7 +17,7 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
             .ThenBy(participant => participant.FirstName)
             .ToListAsync(cancellationToken);
 
-        return [.. participants.Select(ToResponse)];
+        return [.. participants.Select(DtoMapper.ToDto)];
     }
 
     public async Task<ParticipantDto?> GetByIdAsync(int participantId, CancellationToken cancellationToken = default)
@@ -26,7 +26,7 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
             .AsNoTracking()
             .FirstOrDefaultAsync(participant => participant.ParticipantId == participantId, cancellationToken);
 
-        return participant is null ? null : ToResponse(participant);
+        return participant is null ? null : DtoMapper.ToDto(participant);
     }
 
     public async Task<ParticipantDto> CreateAsync(ParticipantCreateRequest request, CancellationToken cancellationToken = default)
@@ -38,7 +38,7 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
         await dbContext.SaveChangesAsync(cancellationToken);
         await auditLogService.WriteAsync(nameof(Participant), participant.ParticipantId, "Created", cancellationToken: cancellationToken);
 
-        return ToResponse(participant);
+        return DtoMapper.ToDto(participant);
     }
 
     public async Task<ParticipantDto?> UpdateAsync(int participantId, ParticipantUpdateRequest request, CancellationToken cancellationToken = default)
@@ -54,7 +54,7 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
         await dbContext.SaveChangesAsync(cancellationToken);
         await auditLogService.WriteAsync(nameof(Participant), participant.ParticipantId, "Updated", cancellationToken: cancellationToken);
 
-        return ToResponse(participant);
+        return DtoMapper.ToDto(participant);
     }
 
     public async Task<bool> DeleteAsync(int participantId, CancellationToken cancellationToken = default)
@@ -80,17 +80,4 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
         participant.StartDate = request.StartDate;
     }
 
-    private static ParticipantDto ToResponse(Participant participant)
-    {
-        return new ParticipantDto
-        {
-            ParticipantId = participant.ParticipantId,
-            FirstName = participant.FirstName,
-            LastName = participant.LastName,
-            EmailAddress = participant.EmailAddress,
-            DateOfBirth = participant.DateOfBirth,
-            ParticipantCode = participant.ParticipantCode,
-            StartDate = participant.StartDate
-        };
-    }
 }

@@ -46,7 +46,7 @@ public class QuestionnaireAssignmentService(PmsDbContext dbContext, IAuditLogSer
             .OrderByDescending(assignment => assignment.AssignedDate)
             .ToListAsync(cancellationToken);
 
-        return [.. assignments.Select(ToResponse)];
+        return [.. assignments.Select(DtoMapper.ToDto)];
     }
 
     public async Task<QuestionnaireAssignmentDto?> CompleteAsync(int questionnaireAssignmentId, CancellationToken cancellationToken = default)
@@ -75,74 +75,6 @@ public class QuestionnaireAssignmentService(PmsDbContext dbContext, IAuditLogSer
                     .ThenInclude(question => question.Choices)
             .FirstOrDefaultAsync(assignment => assignment.QuestionnaireAssignmentId == questionnaireAssignmentId, cancellationToken);
 
-        return assignment is null ? null : ToResponse(assignment);
-    }
-
-    private static QuestionnaireAssignmentDto ToResponse(QuestionnaireAssignment assignment)
-    {
-        return new QuestionnaireAssignmentDto
-        {
-            QuestionnaireAssignmentId = assignment.QuestionnaireAssignmentId,
-            ParticipantId = assignment.ParticipantId,
-            QuestionnaireId = assignment.QuestionnaireId,
-            AssignedDate = assignment.AssignedDate,
-            Completed = assignment.Completed,
-            Participant = assignment.Participant is null ? null : ToResponse(assignment.Participant),
-            Questionnaire = assignment.Questionnaire is null ? null : ToResponse(assignment.Questionnaire)
-        };
-    }
-
-    private static ParticipantDto ToResponse(Participant participant)
-    {
-        return new ParticipantDto
-        {
-            ParticipantId = participant.ParticipantId,
-            FirstName = participant.FirstName,
-            LastName = participant.LastName,
-            EmailAddress = participant.EmailAddress,
-            DateOfBirth = participant.DateOfBirth,
-            ParticipantCode = participant.ParticipantCode,
-            StartDate = participant.StartDate
-        };
-    }
-
-    private static QuestionnaireDto ToResponse(Questionnaire questionnaire)
-    {
-        return new QuestionnaireDto
-        {
-            QuestionnaireId = questionnaire.QuestionnaireId,
-            Title = questionnaire.Title,
-            Questions = [.. questionnaire.Questions
-                .OrderBy(question => question.DisplayOrder)
-                .Select(ToResponse)]
-        };
-    }
-
-    private static QuestionDto ToResponse(Question question)
-    {
-        return new QuestionDto
-        {
-            QuestionId = question.QuestionId,
-            QuestionnaireId = question.QuestionnaireId,
-            Text = question.Text,
-            QuestionType = question.QuestionType,
-            DisplayOrder = question.DisplayOrder,
-            ParentQuestionId = question.ParentQuestionId,
-            ParentChoiceId = question.ParentChoiceId,
-            Choices = [.. question.Choices
-                .OrderBy(choice => choice.DisplayOrder)
-                .Select(ToResponse)]
-        };
-    }
-
-    private static SelectableQuestionChoiceDto ToResponse(SelectableQuestionChoice choice)
-    {
-        return new SelectableQuestionChoiceDto
-        {
-            SelectableQuestionChoiceId = choice.SelectableQuestionChoiceId,
-            QuestionId = choice.QuestionId,
-            ChoiceText = choice.ChoiceText,
-            DisplayOrder = choice.DisplayOrder
-        };
+        return assignment is null ? null : DtoMapper.ToDto(assignment);
     }
 }
