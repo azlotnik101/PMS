@@ -97,33 +97,33 @@ FROM Questions
 WHERE QuestionnaireId = @QuestionnaireId
   AND Text = 'Which tablet brand do you use?';
 
-IF NOT EXISTS (SELECT 1 FROM QuestionOptions WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Apple')
+IF NOT EXISTS (SELECT 1 FROM SelectableQuestionChoices WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Apple')
 BEGIN
-    INSERT INTO QuestionOptions (QuestionId, OptionText, DisplayOrder)
+    INSERT INTO SelectableQuestionChoices (QuestionId, OptionText, DisplayOrder)
     VALUES (@TabletBrandQuestionId, 'Apple', 1);
 END;
 
-IF NOT EXISTS (SELECT 1 FROM QuestionOptions WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Samsung')
+IF NOT EXISTS (SELECT 1 FROM SelectableQuestionChoices WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Samsung')
 BEGIN
-    INSERT INTO QuestionOptions (QuestionId, OptionText, DisplayOrder)
+    INSERT INTO SelectableQuestionChoices (QuestionId, OptionText, DisplayOrder)
     VALUES (@TabletBrandQuestionId, 'Samsung', 2);
 END;
 
-IF NOT EXISTS (SELECT 1 FROM QuestionOptions WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Microsoft Surface')
+IF NOT EXISTS (SELECT 1 FROM SelectableQuestionChoices WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Microsoft Surface')
 BEGIN
-    INSERT INTO QuestionOptions (QuestionId, OptionText, DisplayOrder)
+    INSERT INTO SelectableQuestionChoices (QuestionId, OptionText, DisplayOrder)
     VALUES (@TabletBrandQuestionId, 'Microsoft Surface', 3);
 END;
 
-IF NOT EXISTS (SELECT 1 FROM QuestionOptions WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Lenovo')
+IF NOT EXISTS (SELECT 1 FROM SelectableQuestionChoices WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Lenovo')
 BEGIN
-    INSERT INTO QuestionOptions (QuestionId, OptionText, DisplayOrder)
+    INSERT INTO SelectableQuestionChoices (QuestionId, OptionText, DisplayOrder)
     VALUES (@TabletBrandQuestionId, 'Lenovo', 4);
 END;
 
-IF NOT EXISTS (SELECT 1 FROM QuestionOptions WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Huawei')
+IF NOT EXISTS (SELECT 1 FROM SelectableQuestionChoices WHERE QuestionId = @TabletBrandQuestionId AND OptionText = 'Huawei')
 BEGIN
-    INSERT INTO QuestionOptions (QuestionId, OptionText, DisplayOrder)
+    INSERT INTO SelectableQuestionChoices (QuestionId, OptionText, DisplayOrder)
     VALUES (@TabletBrandQuestionId, 'Huawei', 5);
 END;
 
@@ -158,7 +158,7 @@ SELECT
 FROM Questionnaires qn
 INNER JOIN Questions q
     ON qn.QuestionnaireId = q.QuestionnaireId
-LEFT JOIN QuestionOptions qo
+LEFT JOIN SelectableQuestionChoices qo
     ON q.QuestionId = qo.QuestionId
 WHERE qn.QuestionnaireId = @QuestionnaireId
 ORDER BY q.DisplayOrder, qo.DisplayOrder;

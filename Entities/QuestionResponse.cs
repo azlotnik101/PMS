@@ -12,7 +12,7 @@ public class QuestionResponse
 
     public decimal? NumericValue { get; set; }
 
-    public string? SelectedOptionIds { get; set; }
+    public string? SelectedChoiceIds { get; set; }
 
     public DateTime AnsweredDate { get; set; }
 

@@ -25,7 +25,7 @@ public class PmsDbContext(DbContextOptions<PmsDbContext> options) : DbContext(op
 
     public DbSet<QuestionnaireAssignment> QuestionnaireAssignments => Set<QuestionnaireAssignment>();
 
-    public DbSet<QuestionOption> QuestionOptions => Set<QuestionOption>();
+    public DbSet<SelectableQuestionChoice> SelectableQuestionChoices => Set<SelectableQuestionChoice>();
 
     public DbSet<QuestionResponse> QuestionResponses => Set<QuestionResponse>();
 
@@ -56,21 +56,21 @@ public class PmsDbContext(DbContextOptions<PmsDbContext> options) : DbContext(op
                 .HasForeignKey(question => question.ParentQuestionId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            entity.HasOne(question => question.ParentOption)
+            entity.HasOne(question => question.ParentChoice)
                 .WithMany()
-                .HasForeignKey(question => question.ParentOptionId)
+                .HasForeignKey(question => question.ParentChoiceId)
                 .OnDelete(DeleteBehavior.NoAction);
         });
 
-        modelBuilder.Entity<QuestionOption>(entity =>
+        modelBuilder.Entity<SelectableQuestionChoice>(entity =>
         {
-            entity.Property(option => option.OptionText)
+            entity.Property(choice => choice.ChoiceText)
                 .HasMaxLength(500)
                 .IsRequired();
 
-            entity.HasOne(option => option.Question)
-                .WithMany(question => question.Options)
-                .HasForeignKey(option => option.QuestionId)
+            entity.HasOne(choice => choice.Question)
+                .WithMany(question => question.Choices)
+                .HasForeignKey(choice => choice.QuestionId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -130,7 +130,7 @@ public class PmsDbContext(DbContextOptions<PmsDbContext> options) : DbContext(op
             entity.Property(response => response.NumericValue)
                 .HasPrecision(18, 2);
 
-            entity.Property(response => response.SelectedOptionIds)
+            entity.Property(response => response.SelectedChoiceIds)
                 .HasMaxLength(1000);
 
             entity.HasOne(response => response.QuestionnaireAssignment)

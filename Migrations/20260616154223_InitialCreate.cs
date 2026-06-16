@@ -34,10 +34,10 @@ namespace PMS.Migrations
                 {
                     ParticipantId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    EmailAddress = table.Column<string>(type: "nvarchar(320)", maxLength: 320, nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    DateOfBirth = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     ParticipantCode = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -68,8 +68,7 @@ namespace PMS.Migrations
                     ParticipantId = table.Column<int>(type: "int", nullable: false),
                     QuestionnaireId = table.Column<int>(type: "int", nullable: false),
                     AssignedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Completed = table.Column<bool>(type: "bit", nullable: false),
-                    CompletedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    Completed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,18 +88,26 @@ namespace PMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuestionOptions",
+                name: "QuestionResponses",
                 columns: table => new
                 {
-                    QuestionOptionId = table.Column<int>(type: "int", nullable: false)
+                    QuestionResponseId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    QuestionnaireAssignmentId = table.Column<int>(type: "int", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
-                    OptionText = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    DisplayOrder = table.Column<int>(type: "int", nullable: false)
+                    TextValue = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
+                    NumericValue = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    SelectedChoiceIds = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    AnsweredDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuestionOptions", x => x.QuestionOptionId);
+                    table.PrimaryKey("PK_QuestionResponses", x => x.QuestionResponseId);
+                    table.ForeignKey(
+                        name: "FK_QuestionResponses_QuestionnaireAssignments_QuestionnaireAssignmentId",
+                        column: x => x.QuestionnaireAssignmentId,
+                        principalTable: "QuestionnaireAssignments",
+                        principalColumn: "QuestionnaireAssignmentId");
                 });
 
             migrationBuilder.CreateTable(
@@ -114,16 +121,11 @@ namespace PMS.Migrations
                     QuestionType = table.Column<int>(type: "int", nullable: false),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false),
                     ParentQuestionId = table.Column<int>(type: "int", nullable: true),
-                    ParentOptionId = table.Column<int>(type: "int", nullable: true)
+                    ParentChoiceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Questions", x => x.QuestionId);
-                    table.ForeignKey(
-                        name: "FK_Questions_QuestionOptions_ParentOptionId",
-                        column: x => x.ParentOptionId,
-                        principalTable: "QuestionOptions",
-                        principalColumn: "QuestionOptionId");
                     table.ForeignKey(
                         name: "FK_Questions_Questionnaires_QuestionnaireId",
                         column: x => x.QuestionnaireId,
@@ -138,60 +140,23 @@ namespace PMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "QuestionResponses",
+                name: "SelectableQuestionChoices",
                 columns: table => new
                 {
-                    QuestionResponseId = table.Column<int>(type: "int", nullable: false)
+                    SelectableQuestionChoiceId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionnaireAssignmentId = table.Column<int>(type: "int", nullable: false),
-                    ParticipantId = table.Column<int>(type: "int", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
-                    TextValue = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
-                    NumericValue = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
-                    AnsweredDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ChoiceText = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    DisplayOrder = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuestionResponses", x => x.QuestionResponseId);
+                    table.PrimaryKey("PK_SelectableQuestionChoices", x => x.SelectableQuestionChoiceId);
                     table.ForeignKey(
-                        name: "FK_QuestionResponses_Participants_ParticipantId",
-                        column: x => x.ParticipantId,
-                        principalTable: "Participants",
-                        principalColumn: "ParticipantId");
-                    table.ForeignKey(
-                        name: "FK_QuestionResponses_QuestionnaireAssignments_QuestionnaireAssignmentId",
-                        column: x => x.QuestionnaireAssignmentId,
-                        principalTable: "QuestionnaireAssignments",
-                        principalColumn: "QuestionnaireAssignmentId");
-                    table.ForeignKey(
-                        name: "FK_QuestionResponses_Questions_QuestionId",
+                        name: "FK_SelectableQuestionChoices_Questions_QuestionId",
                         column: x => x.QuestionId,
                         principalTable: "Questions",
-                        principalColumn: "QuestionId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QuestionResponseOptions",
-                columns: table => new
-                {
-                    QuestionResponseOptionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionResponseId = table.Column<int>(type: "int", nullable: false),
-                    QuestionOptionId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuestionResponseOptions", x => x.QuestionResponseOptionId);
-                    table.ForeignKey(
-                        name: "FK_QuestionResponseOptions_QuestionOptions_QuestionOptionId",
-                        column: x => x.QuestionOptionId,
-                        principalTable: "QuestionOptions",
-                        principalColumn: "QuestionOptionId");
-                    table.ForeignKey(
-                        name: "FK_QuestionResponseOptions_QuestionResponses_QuestionResponseId",
-                        column: x => x.QuestionResponseId,
-                        principalTable: "QuestionResponses",
-                        principalColumn: "QuestionResponseId",
+                        principalColumn: "QuestionId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -218,26 +183,6 @@ namespace PMS.Migrations
                 column: "QuestionnaireId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuestionOptions_QuestionId",
-                table: "QuestionOptions",
-                column: "QuestionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QuestionResponseOptions_QuestionOptionId",
-                table: "QuestionResponseOptions",
-                column: "QuestionOptionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QuestionResponseOptions_QuestionResponseId",
-                table: "QuestionResponseOptions",
-                column: "QuestionResponseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QuestionResponses_ParticipantId",
-                table: "QuestionResponses",
-                column: "ParticipantId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_QuestionResponses_QuestionId",
                 table: "QuestionResponses",
                 column: "QuestionId");
@@ -248,9 +193,9 @@ namespace PMS.Migrations
                 column: "QuestionnaireAssignmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Questions_ParentOptionId",
+                name: "IX_Questions_ParentChoiceId",
                 table: "Questions",
-                column: "ParentOptionId");
+                column: "ParentChoiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_ParentQuestionId",
@@ -262,13 +207,24 @@ namespace PMS.Migrations
                 table: "Questions",
                 column: "QuestionnaireId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_SelectableQuestionChoices_QuestionId",
+                table: "SelectableQuestionChoices",
+                column: "QuestionId");
+
             migrationBuilder.AddForeignKey(
-                name: "FK_QuestionOptions_Questions_QuestionId",
-                table: "QuestionOptions",
+                name: "FK_QuestionResponses_Questions_QuestionId",
+                table: "QuestionResponses",
                 column: "QuestionId",
                 principalTable: "Questions",
-                principalColumn: "QuestionId",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "QuestionId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Questions_SelectableQuestionChoices_ParentChoiceId",
+                table: "Questions",
+                column: "ParentChoiceId",
+                principalTable: "SelectableQuestionChoices",
+                principalColumn: "SelectableQuestionChoiceId");
         }
 
         /// <inheritdoc />
@@ -279,14 +235,11 @@ namespace PMS.Migrations
                 table: "Questions");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_QuestionOptions_Questions_QuestionId",
-                table: "QuestionOptions");
+                name: "FK_SelectableQuestionChoices_Questions_QuestionId",
+                table: "SelectableQuestionChoices");
 
             migrationBuilder.DropTable(
                 name: "AuditLogs");
-
-            migrationBuilder.DropTable(
-                name: "QuestionResponseOptions");
 
             migrationBuilder.DropTable(
                 name: "QuestionResponses");
@@ -304,7 +257,7 @@ namespace PMS.Migrations
                 name: "Questions");
 
             migrationBuilder.DropTable(
-                name: "QuestionOptions");
+                name: "SelectableQuestionChoices");
         }
     }
 }

@@ -34,28 +34,28 @@ public class QuestionCreateRequest
 
     public int? ParentQuestionId { get; set; }
 
-    public int? ParentOptionId { get; set; }
+    public int? ParentChoiceId { get; set; }
 
-    public List<QuestionOptionCreateRequest> Options { get; set; } = [];
+    public List<SelectableQuestionChoiceCreateRequest> Choices { get; set; } = [];
 }
 
 public class QuestionUpdateRequest : QuestionCreateRequest
 {
     public int? QuestionId { get; set; }
 
-    public new List<QuestionOptionUpdateRequest> Options { get; set; } = [];
+    public new List<SelectableQuestionChoiceUpdateRequest> Choices { get; set; } = [];
 }
 
-public class QuestionOptionCreateRequest
+public class SelectableQuestionChoiceCreateRequest
 {
     [Required]
     [MaxLength(500)]
-    public string OptionText { get; set; } = null!;
+    public string ChoiceText { get; set; } = null!;
 
     public int DisplayOrder { get; set; }
 }
 
-public class QuestionOptionUpdateRequest : QuestionOptionCreateRequest
+public class SelectableQuestionChoiceUpdateRequest : SelectableQuestionChoiceCreateRequest
 {
-    public int? QuestionOptionId { get; set; }
+    public int? SelectableQuestionChoiceId { get; set; }
 }

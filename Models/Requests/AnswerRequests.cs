@@ -14,5 +14,5 @@ public class QuestionResponseCreateRequest
 
     public decimal? NumericValue { get; set; }
 
-    public List<int> SelectedQuestionOptionIds { get; set; } = [];
+    public List<int> SelectedQuestionChoiceIds { get; set; } = [];
 }

@@ -14,13 +14,13 @@ public class Question
 
     public int? ParentQuestionId { get; set; }
 
-    public int? ParentOptionId { get; set; }
+    public int? ParentChoiceId { get; set; }
 
     public Questionnaire Questionnaire { get; set; } = null!;
 
     public Question? ParentQuestion { get; set; }
 
-    public QuestionOption? ParentOption { get; set; }
+    public SelectableQuestionChoice? ParentChoice { get; set; }
 
-    public ICollection<QuestionOption> Options { get; set; } = new List<QuestionOption>();
+    public ICollection<SelectableQuestionChoice> Choices { get; set; } = new List<SelectableQuestionChoice>();
 }

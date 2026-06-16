@@ -1,0 +1,1240 @@
+{
+"openapi": "3.0.4",
+"info": {
+"title": "PMS.API",
+"version": "1.0"
+},
+"paths": {
+"/api/audit-logs": {
+"get": {
+"tags": [
+"AuditLogs"
+],
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/AuditLogDto"
+}
+}
+},
+"application/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/AuditLogDto"
+}
+}
+},
+"text/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/AuditLogDto"
+}
+}
+}
+}
+}
+}
+}
+},
+"/api/Participants": {
+"get": {
+"tags": [
+"Participants"
+],
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+}
+},
+"application/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+}
+},
+"text/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+}
+}
+}
+}
+}
+},
+"post": {
+"tags": [
+"Participants"
+],
+"requestBody": {
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantCreateRequest"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantCreateRequest"
+}
+},
+"application/*+json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantCreateRequest"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+}
+}
+}
+}
+}
+},
+"/api/Participants/{participantId}": {
+"get": {
+"tags": [
+"Participants"
+],
+"parameters": [
+{
+"name": "participantId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+}
+}
+}
+}
+},
+"put": {
+"tags": [
+"Participants"
+],
+"parameters": [
+{
+"name": "participantId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"requestBody": {
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantUpdateRequest"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantUpdateRequest"
+}
+},
+"application/*+json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantUpdateRequest"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/ParticipantDto"
+}
+}
+}
+}
+}
+},
+"delete": {
+"tags": [
+"Participants"
+],
+"parameters": [
+{
+"name": "participantId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"responses": {
+"200": {
+"description": "OK"
+}
+}
+}
+},
+"/api/questionnaire-assignments": {
+"post": {
+"tags": [
+"QuestionnaireAssignments"
+],
+"requestBody": {
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentCreateRequest"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentCreateRequest"
+}
+},
+"application/*+json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentCreateRequest"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+}
+}
+}
+}
+}
+},
+"/api/questionnaire-assignments/participant/{participantId}": {
+"get": {
+"tags": [
+"QuestionnaireAssignments"
+],
+"parameters": [
+{
+"name": "participantId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+}
+},
+"application/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+}
+},
+"text/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+}
+}
+}
+}
+}
+}
+},
+"/api/questionnaire-assignments/{questionnaireAssignmentId}/complete": {
+"put": {
+"tags": [
+"QuestionnaireAssignments"
+],
+"parameters": [
+{
+"name": "questionnaireAssignmentId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireAssignmentDto"
+}
+}
+}
+}
+}
+}
+},
+"/api/Questionnaires": {
+"get": {
+"tags": [
+"Questionnaires"
+],
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+}
+},
+"application/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+}
+},
+"text/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+}
+}
+}
+}
+}
+},
+"post": {
+"tags": [
+"Questionnaires"
+],
+"requestBody": {
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireCreateRequest"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireCreateRequest"
+}
+},
+"application/*+json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireCreateRequest"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+}
+}
+}
+}
+}
+},
+"/api/Questionnaires/{questionnaireId}": {
+"get": {
+"tags": [
+"Questionnaires"
+],
+"parameters": [
+{
+"name": "questionnaireId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+}
+}
+}
+}
+},
+"put": {
+"tags": [
+"Questionnaires"
+],
+"parameters": [
+{
+"name": "questionnaireId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"requestBody": {
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireUpdateRequest"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireUpdateRequest"
+}
+},
+"application/*+json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireUpdateRequest"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+}
+}
+}
+}
+},
+"delete": {
+"tags": [
+"Questionnaires"
+],
+"parameters": [
+{
+"name": "questionnaireId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"responses": {
+"200": {
+"description": "OK"
+}
+}
+}
+},
+"/api/question-responses": {
+"post": {
+"tags": [
+"QuestionResponses"
+],
+"requestBody": {
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionResponseCreateRequest"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionResponseCreateRequest"
+}
+},
+"application/*+json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionResponseCreateRequest"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"$ref": "#/components/schemas/QuestionAnswerDto"
+}
+},
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionAnswerDto"
+}
+},
+"text/json": {
+"schema": {
+"$ref": "#/components/schemas/QuestionAnswerDto"
+}
+}
+}
+}
+}
+}
+},
+"/api/question-responses/assignment/{questionnaireAssignmentId}": {
+"get": {
+"tags": [
+"QuestionResponses"
+],
+"parameters": [
+{
+"name": "questionnaireAssignmentId",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"format": "int32"
+}
+}
+],
+"responses": {
+"200": {
+"description": "OK",
+"content": {
+"text/plain": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionAnswerDto"
+}
+}
+},
+"application/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionAnswerDto"
+}
+}
+},
+"text/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionAnswerDto"
+}
+}
+}
+}
+}
+}
+}
+}
+},
+"components": {
+"schemas": {
+"AuditLogDto": {
+"type": "object",
+"properties": {
+"auditLogId": {
+"type": "integer",
+"format": "int64"
+},
+"entityName": {
+"type": "string",
+"nullable": true
+},
+"entityId": {
+"type": "integer",
+"format": "int32"
+},
+"action": {
+"type": "string",
+"nullable": true
+},
+"details": {
+"type": "string",
+"nullable": true
+},
+"createdDate": {
+"type": "string",
+"format": "date-time"
+}
+},
+"additionalProperties": false
+},
+"ParticipantCreateRequest": {
+"required": [
+"emailAddress",
+"firstName",
+"lastName",
+"participantCode"
+],
+"type": "object",
+"properties": {
+"firstName": {
+"maxLength": 200,
+"minLength": 1,
+"type": "string"
+},
+"lastName": {
+"maxLength": 200,
+"minLength": 1,
+"type": "string"
+},
+"emailAddress": {
+"maxLength": 320,
+"minLength": 1,
+"type": "string",
+"format": "email"
+},
+"dateOfBirth": {
+"type": "string",
+"format": "date-time"
+},
+"participantCode": {
+"maxLength": 100,
+"minLength": 1,
+"type": "string"
+},
+"startDate": {
+"type": "string",
+"format": "date-time"
+}
+},
+"additionalProperties": false
+},
+"ParticipantDto": {
+"type": "object",
+"properties": {
+"participantId": {
+"type": "integer",
+"format": "int32"
+},
+"firstName": {
+"type": "string",
+"nullable": true
+},
+"lastName": {
+"type": "string",
+"nullable": true
+},
+"emailAddress": {
+"type": "string",
+"nullable": true
+},
+"dateOfBirth": {
+"type": "string",
+"format": "date-time"
+},
+"participantCode": {
+"type": "string",
+"nullable": true
+},
+"startDate": {
+"type": "string",
+"format": "date-time"
+}
+},
+"additionalProperties": false
+},
+"ParticipantUpdateRequest": {
+"required": [
+"emailAddress",
+"firstName",
+"lastName",
+"participantCode"
+],
+"type": "object",
+"properties": {
+"firstName": {
+"maxLength": 200,
+"minLength": 1,
+"type": "string"
+},
+"lastName": {
+"maxLength": 200,
+"minLength": 1,
+"type": "string"
+},
+"emailAddress": {
+"maxLength": 320,
+"minLength": 1,
+"type": "string",
+"format": "email"
+},
+"dateOfBirth": {
+"type": "string",
+"format": "date-time"
+},
+"participantCode": {
+"maxLength": 100,
+"minLength": 1,
+"type": "string"
+},
+"startDate": {
+"type": "string",
+"format": "date-time"
+}
+},
+"additionalProperties": false
+},
+"QuestionAnswerDto": {
+"type": "object",
+"properties": {
+"questionResponseId": {
+"type": "integer",
+"format": "int32"
+},
+"questionnaireAssignmentId": {
+"type": "integer",
+"format": "int32"
+},
+"questionId": {
+"type": "integer",
+"format": "int32"
+},
+"textValue": {
+"type": "string",
+"nullable": true
+},
+"numericValue": {
+"type": "number",
+"format": "double",
+"nullable": true
+},
+"answeredDate": {
+"type": "string",
+"format": "date-time"
+},
+"selectedQuestionChoiceIds": {
+"type": "array",
+"items": {
+"type": "integer",
+"format": "int32"
+},
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"QuestionCreateRequest": {
+"required": [
+"text"
+],
+"type": "object",
+"properties": {
+"text": {
+"maxLength": 1000,
+"minLength": 1,
+"type": "string"
+},
+"questionType": {
+"$ref": "#/components/schemas/QuestionType"
+},
+"displayOrder": {
+"type": "integer",
+"format": "int32"
+},
+"parentQuestionId": {
+"type": "integer",
+"format": "int32",
+"nullable": true
+},
+"parentChoiceId": {
+"type": "integer",
+"format": "int32",
+"nullable": true
+},
+"choices": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/SelectableQuestionChoiceCreateRequest"
+},
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"QuestionDto": {
+"type": "object",
+"properties": {
+"questionId": {
+"type": "integer",
+"format": "int32"
+},
+"questionnaireId": {
+"type": "integer",
+"format": "int32"
+},
+"text": {
+"type": "string",
+"nullable": true
+},
+"questionType": {
+"$ref": "#/components/schemas/QuestionType"
+},
+"displayOrder": {
+"type": "integer",
+"format": "int32"
+},
+"parentQuestionId": {
+"type": "integer",
+"format": "int32",
+"nullable": true
+},
+"parentChoiceId": {
+"type": "integer",
+"format": "int32",
+"nullable": true
+},
+"choices": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/SelectableQuestionChoiceDto"
+},
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"QuestionResponseCreateRequest": {
+"type": "object",
+"properties": {
+"questionnaireAssignmentId": {
+"maximum": 2147483647,
+"minimum": 1,
+"type": "integer",
+"format": "int32"
+},
+"questionId": {
+"maximum": 2147483647,
+"minimum": 1,
+"type": "integer",
+"format": "int32"
+},
+"textValue": {
+"type": "string",
+"nullable": true
+},
+"numericValue": {
+"type": "number",
+"format": "double",
+"nullable": true
+},
+"selectedQuestionChoiceIds": {
+"type": "array",
+"items": {
+"type": "integer",
+"format": "int32"
+},
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"QuestionType": {
+"enum": [
+1,
+2,
+3,
+4
+],
+"type": "integer",
+"format": "int32"
+},
+"QuestionUpdateRequest": {
+"required": [
+"text"
+],
+"type": "object",
+"properties": {
+"text": {
+"maxLength": 1000,
+"minLength": 1,
+"type": "string"
+},
+"questionType": {
+"$ref": "#/components/schemas/QuestionType"
+},
+"displayOrder": {
+"type": "integer",
+"format": "int32"
+},
+"parentQuestionId": {
+"type": "integer",
+"format": "int32",
+"nullable": true
+},
+"parentChoiceId": {
+"type": "integer",
+"format": "int32",
+"nullable": true
+},
+"choices": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/SelectableQuestionChoiceUpdateRequest"
+},
+"nullable": true
+},
+"questionId": {
+"type": "integer",
+"format": "int32",
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"QuestionnaireAssignmentCreateRequest": {
+"type": "object",
+"properties": {
+"participantId": {
+"maximum": 2147483647,
+"minimum": 1,
+"type": "integer",
+"format": "int32"
+},
+"questionnaireId": {
+"maximum": 2147483647,
+"minimum": 1,
+"type": "integer",
+"format": "int32"
+},
+"assignedDate": {
+"type": "string",
+"format": "date-time",
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"QuestionnaireAssignmentDto": {
+"type": "object",
+"properties": {
+"questionnaireAssignmentId": {
+"type": "integer",
+"format": "int32"
+},
+"participantId": {
+"type": "integer",
+"format": "int32"
+},
+"questionnaireId": {
+"type": "integer",
+"format": "int32"
+},
+"assignedDate": {
+"type": "string",
+"format": "date-time"
+},
+"completed": {
+"type": "boolean"
+},
+"participant": {
+"$ref": "#/components/schemas/ParticipantDto"
+},
+"questionnaire": {
+"$ref": "#/components/schemas/QuestionnaireDto"
+}
+},
+"additionalProperties": false
+},
+"QuestionnaireCreateRequest": {
+"required": [
+"title"
+],
+"type": "object",
+"properties": {
+"title": {
+"maxLength": 200,
+"minLength": 1,
+"type": "string"
+},
+"questions": {
+"minItems": 1,
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionCreateRequest"
+},
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"QuestionnaireDto": {
+"type": "object",
+"properties": {
+"questionnaireId": {
+"type": "integer",
+"format": "int32"
+},
+"title": {
+"type": "string",
+"nullable": true
+},
+"questions": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionDto"
+},
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"QuestionnaireUpdateRequest": {
+"required": [
+"title"
+],
+"type": "object",
+"properties": {
+"title": {
+"maxLength": 200,
+"minLength": 1,
+"type": "string"
+},
+"questions": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/QuestionUpdateRequest"
+},
+"nullable": true
+}
+},
+"additionalProperties": false
+},
+"SelectableQuestionChoiceCreateRequest": {
+"required": [
+"choiceText"
+],
+"type": "object",
+"properties": {
+"choiceText": {
+"maxLength": 500,
+"minLength": 1,
+"type": "string"
+},
+"displayOrder": {
+"type": "integer",
+"format": "int32"
+}
+},
+"additionalProperties": false
+},
+"SelectableQuestionChoiceDto": {
+"type": "object",
+"properties": {
+"selectableQuestionChoiceId": {
+"type": "integer",
+"format": "int32"
+},
+"questionId": {
+"type": "integer",
+"format": "int32"
+},
+"choiceText": {
+"type": "string",
+"nullable": true
+},
+"displayOrder": {
+"type": "integer",
+"format": "int32"
+}
+},
+"additionalProperties": false
+},
+"SelectableQuestionChoiceUpdateRequest": {
+"required": [
+"choiceText"
+],
+"type": "object",
+"properties": {
+"choiceText": {
+"maxLength": 500,
+"minLength": 1,
+"type": "string"
+},
+"displayOrder": {
+"type": "integer",
+"format": "int32"
+},
+"selectableQuestionChoiceId": {
+"type": "integer",
+"format": "int32",
+"nullable": true
+}
+},
+"additionalProperties": false
+}
+}
+},
+"tags": [
+{
+"name": "AuditLogs"
+},
+{
+"name": "Participants"
+},
+{
+"name": "QuestionnaireAssignments"
+},
+{
+"name": "Questionnaires"
+},
+{
+"name": "QuestionResponses"
+}
+]
+}

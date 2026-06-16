@@ -1,0 +1,114 @@
+@baseUrl = https://localhost:5001
+@participantId = 1
+@questionnaireId = 1
+@questionnaireAssignmentId = 1
+@hoursQuestionId = 1
+@devicesQuestionId = 2
+@tabletBrandQuestionId = 3
+@textQuestionId = 4
+@smartphoneOptionId = 1
+@laptopOptionId = 2
+@tabletOptionId = 3
+@appleOptionId = 4
+
+### POC API call order
+### 1. Run Scripts/SeedQuestionnairePocData.sql first to create questionnaire/questions/options.
+### 2. Create participant through API so PII is encrypted by EF Core.
+### 3. Assign questionnaire to participant.
+### 4. Submit answers.
+### 5. Complete assignment.
+### 6. Review responses and audit logs.
+
+### Get all questionnaires
+GET {{baseUrl}}/api/questionnaires
+Accept: application/json
+
+### Get questionnaire details
+GET {{baseUrl}}/api/questionnaires/{{questionnaireId}}
+Accept: application/json
+
+### Create participant
+POST {{baseUrl}}/api/participants
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "emailAddress": "john.doe@example.com",
+  "dateOfBirth": "1990-01-15T00:00:00",
+  "participantCode": "P001",
+  "startDate": "2026-01-01T00:00:00"
+}
+
+### Get participants
+GET {{baseUrl}}/api/participants
+Accept: application/json
+
+### Assign questionnaire to participant
+POST {{baseUrl}}/api/questionnaire-assignments
+Content-Type: application/json
+
+{
+  "participantId": {{participantId}},
+  "questionnaireId": {{questionnaireId}},
+  "assignedDate": "2026-01-01T00:00:00Z"
+}
+
+### Get assignments for participant
+GET {{baseUrl}}/api/questionnaire-assignments/participant/{{participantId}}
+Accept: application/json
+
+### Submit numeric response: How many hours per day do you spend online?
+POST {{baseUrl}}/api/question-responses
+Content-Type: application/json
+
+{
+  "questionnaireAssignmentId": {{questionnaireAssignmentId}},
+  "questionId": {{hoursQuestionId}},
+  "numericValue": 8,
+  "selectedQuestionOptionIds": []
+}
+
+### Submit multi-select response: Which devices do you use?
+POST {{baseUrl}}/api/question-responses
+Content-Type: application/json
+
+{
+  "questionnaireAssignmentId": {{questionnaireAssignmentId}},
+  "questionId": {{devicesQuestionId}},
+  "selectedQuestionOptionIds": [{{smartphoneOptionId}}, {{laptopOptionId}}, {{tabletOptionId}}]
+}
+
+### Submit single-select response: Which tablet brand do you use?
+### This question should be shown only because Tablet was selected above.
+POST {{baseUrl}}/api/question-responses
+Content-Type: application/json
+
+{
+  "questionnaireAssignmentId": {{questionnaireAssignmentId}},
+  "questionId": {{tabletBrandQuestionId}},
+  "selectedQuestionOptionIds": [{{appleOptionId}}]
+}
+
+### Submit text response: What improvements would you like?
+POST {{baseUrl}}/api/question-responses
+Content-Type: application/json
+
+{
+  "questionnaireAssignmentId": {{questionnaireAssignmentId}},
+  "questionId": {{textQuestionId}},
+  "textValue": "Better search and recommendations.",
+  "selectedQuestionOptionIds": []
+}
+
+### Get responses for assignment
+GET {{baseUrl}}/api/question-responses/assignment/{{questionnaireAssignmentId}}
+Accept: application/json
+
+### Complete questionnaire assignment
+PUT {{baseUrl}}/api/questionnaire-assignments/{{questionnaireAssignmentId}}/complete
+Accept: application/json
+
+### Get audit logs
+GET {{baseUrl}}/api/audit-logs
+Accept: application/json

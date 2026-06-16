@@ -23,7 +23,7 @@ public class QuestionResponseService(PmsDbContext dbContext) : IQuestionResponse
 
         var question = await dbContext.Questions
             .AsNoTracking()
-            .Include(question => question.Options)
+            .Include(question => question.Choices)
             .FirstOrDefaultAsync(question => question.QuestionId == request.QuestionId, cancellationToken);
 
         if (question is null)
@@ -31,10 +31,10 @@ public class QuestionResponseService(PmsDbContext dbContext) : IQuestionResponse
             return null;
         }
 
-        if (request.SelectedQuestionOptionIds.Count > 0)
+        if (request.SelectedQuestionChoiceIds.Count > 0)
         {
-            var validOptionIds = question.Options.Select(option => option.QuestionOptionId).ToHashSet();
-            if (request.SelectedQuestionOptionIds.Any(optionId => !validOptionIds.Contains(optionId)))
+            var validChoiceIds = question.Choices.Select(choice => choice.SelectableQuestionChoiceId).ToHashSet();
+            if (request.SelectedQuestionChoiceIds.Any(choiceId => !validChoiceIds.Contains(choiceId)))
             {
                 return null;
             }
@@ -46,7 +46,7 @@ public class QuestionResponseService(PmsDbContext dbContext) : IQuestionResponse
             QuestionId = request.QuestionId,
             TextValue = request.TextValue,
             NumericValue = request.NumericValue,
-            SelectedOptionIds = request.SelectedQuestionOptionIds.Count == 0 ? null : JsonSerializer.Serialize(request.SelectedQuestionOptionIds),
+            SelectedChoiceIds = request.SelectedQuestionChoiceIds.Count == 0 ? null : JsonSerializer.Serialize(request.SelectedQuestionChoiceIds),
             AnsweredDate = DateTime.UtcNow
         };
 
@@ -64,7 +64,7 @@ public class QuestionResponseService(PmsDbContext dbContext) : IQuestionResponse
             .OrderBy(response => response.QuestionId)
             .ToListAsync(cancellationToken);
 
-        return responses.Select(ToResponse).ToList();
+        return [.. responses.Select(ToResponse)];
     }
 
     private async Task<QuestionAnswerDto?> GetByIdAsync(int questionResponseId, CancellationToken cancellationToken)
@@ -86,17 +86,17 @@ public class QuestionResponseService(PmsDbContext dbContext) : IQuestionResponse
             TextValue = response.TextValue,
             NumericValue = response.NumericValue,
             AnsweredDate = response.AnsweredDate,
-            SelectedQuestionOptionIds = ToSelectedQuestionOptionIds(response.SelectedOptionIds)
+            SelectedQuestionChoiceIds = ToSelectedQuestionChoiceIds(response.SelectedChoiceIds)
         };
     }
 
-    private static List<int> ToSelectedQuestionOptionIds(string? selectedOptionIds)
+    private static List<int> ToSelectedQuestionChoiceIds(string? selectedChoiceIds)
     {
-        if (string.IsNullOrWhiteSpace(selectedOptionIds))
+        if (string.IsNullOrWhiteSpace(selectedChoiceIds))
         {
             return [];
         }
 
-        return JsonSerializer.Deserialize<List<int>>(selectedOptionIds) ?? [];
+        return JsonSerializer.Deserialize<List<int>>(selectedChoiceIds) ?? [];
     }
 }

@@ -41,12 +41,12 @@ public class QuestionnaireAssignmentService(PmsDbContext dbContext, IAuditLogSer
             .Include(assignment => assignment.Participant)
             .Include(assignment => assignment.Questionnaire)
                 .ThenInclude(questionnaire => questionnaire.Questions)
-                    .ThenInclude(question => question.Options)
+                    .ThenInclude(question => question.Choices)
             .Where(assignment => assignment.ParticipantId == participantId)
             .OrderByDescending(assignment => assignment.AssignedDate)
             .ToListAsync(cancellationToken);
 
-        return assignments.Select(ToResponse).ToList();
+        return [.. assignments.Select(ToResponse)];
     }
 
     public async Task<QuestionnaireAssignmentDto?> CompleteAsync(int questionnaireAssignmentId, CancellationToken cancellationToken = default)
@@ -72,7 +72,7 @@ public class QuestionnaireAssignmentService(PmsDbContext dbContext, IAuditLogSer
             .Include(assignment => assignment.Participant)
             .Include(assignment => assignment.Questionnaire)
                 .ThenInclude(questionnaire => questionnaire.Questions)
-                    .ThenInclude(question => question.Options)
+                    .ThenInclude(question => question.Choices)
             .FirstOrDefaultAsync(assignment => assignment.QuestionnaireAssignmentId == questionnaireAssignmentId, cancellationToken);
 
         return assignment is null ? null : ToResponse(assignment);
@@ -112,10 +112,9 @@ public class QuestionnaireAssignmentService(PmsDbContext dbContext, IAuditLogSer
         {
             QuestionnaireId = questionnaire.QuestionnaireId,
             Title = questionnaire.Title,
-            Questions = questionnaire.Questions
+            Questions = [.. questionnaire.Questions
                 .OrderBy(question => question.DisplayOrder)
-                .Select(ToResponse)
-                .ToList()
+                .Select(ToResponse)]
         };
     }
 
@@ -129,22 +128,21 @@ public class QuestionnaireAssignmentService(PmsDbContext dbContext, IAuditLogSer
             QuestionType = question.QuestionType,
             DisplayOrder = question.DisplayOrder,
             ParentQuestionId = question.ParentQuestionId,
-            ParentOptionId = question.ParentOptionId,
-            Options = question.Options
-                .OrderBy(option => option.DisplayOrder)
-                .Select(ToResponse)
-                .ToList()
+            ParentChoiceId = question.ParentChoiceId,
+            Choices = [.. question.Choices
+                .OrderBy(choice => choice.DisplayOrder)
+                .Select(ToResponse)]
         };
     }
 
-    private static QuestionOptionDto ToResponse(QuestionOption option)
+    private static SelectableQuestionChoiceDto ToResponse(SelectableQuestionChoice choice)
     {
-        return new QuestionOptionDto
+        return new SelectableQuestionChoiceDto
         {
-            QuestionOptionId = option.QuestionOptionId,
-            QuestionId = option.QuestionId,
-            OptionText = option.OptionText,
-            DisplayOrder = option.DisplayOrder
+            SelectableQuestionChoiceId = choice.SelectableQuestionChoiceId,
+            QuestionId = choice.QuestionId,
+            ChoiceText = choice.ChoiceText,
+            DisplayOrder = choice.DisplayOrder
         };
     }
 }

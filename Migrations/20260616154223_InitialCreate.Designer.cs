@@ -12,7 +12,7 @@ using PMS.Data;
 namespace PMS.Migrations
 {
     [DbContext(typeof(PmsDbContext))]
-    [Migration("20260616131638_InitialCreate")]
+    [Migration("20260616154223_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -66,23 +66,25 @@ namespace PMS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ParticipantId"));
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("DateOfBirth")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
-                        .HasMaxLength(320)
-                        .HasColumnType("nvarchar(320)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("ParticipantCode")
                         .IsRequired()
@@ -114,7 +116,7 @@ namespace PMS.Migrations
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ParentOptionId")
+                    b.Property<int?>("ParentChoiceId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ParentQuestionId")
@@ -133,39 +135,13 @@ namespace PMS.Migrations
 
                     b.HasKey("QuestionId");
 
-                    b.HasIndex("ParentOptionId");
+                    b.HasIndex("ParentChoiceId");
 
                     b.HasIndex("ParentQuestionId");
 
                     b.HasIndex("QuestionnaireId");
 
                     b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("PMS.Entities.QuestionOption", b =>
-                {
-                    b.Property<int>("QuestionOptionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionOptionId"));
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OptionText")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("QuestionOptionId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("QuestionOptions");
                 });
 
             modelBuilder.Entity("PMS.Entities.QuestionResponse", b =>
@@ -183,14 +159,15 @@ namespace PMS.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("ParticipantId")
-                        .HasColumnType("int");
-
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
                     b.Property<int>("QuestionnaireAssignmentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SelectedChoiceIds")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TextValue")
                         .HasMaxLength(4000)
@@ -198,36 +175,11 @@ namespace PMS.Migrations
 
                     b.HasKey("QuestionResponseId");
 
-                    b.HasIndex("ParticipantId");
-
                     b.HasIndex("QuestionId");
 
                     b.HasIndex("QuestionnaireAssignmentId");
 
                     b.ToTable("QuestionResponses");
-                });
-
-            modelBuilder.Entity("PMS.Entities.QuestionResponseOption", b =>
-                {
-                    b.Property<int>("QuestionResponseOptionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionResponseOptionId"));
-
-                    b.Property<int>("QuestionOptionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuestionResponseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("QuestionResponseOptionId");
-
-                    b.HasIndex("QuestionOptionId");
-
-                    b.HasIndex("QuestionResponseId");
-
-                    b.ToTable("QuestionResponseOptions");
                 });
 
             modelBuilder.Entity("PMS.Entities.Questionnaire", b =>
@@ -262,9 +214,6 @@ namespace PMS.Migrations
                     b.Property<bool>("Completed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("CompletedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("ParticipantId")
                         .HasColumnType("int");
 
@@ -280,15 +229,41 @@ namespace PMS.Migrations
                     b.ToTable("QuestionnaireAssignments");
                 });
 
+            modelBuilder.Entity("PMS.Entities.SelectableQuestionChoice", b =>
+                {
+                    b.Property<int>("SelectableQuestionChoiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SelectableQuestionChoiceId"));
+
+                    b.Property<string>("ChoiceText")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SelectableQuestionChoiceId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("SelectableQuestionChoices");
+                });
+
             modelBuilder.Entity("PMS.Entities.Question", b =>
                 {
-                    b.HasOne("PMS.Entities.QuestionOption", "ParentOption")
-                        .WithMany("DependentQuestions")
-                        .HasForeignKey("ParentOptionId")
+                    b.HasOne("PMS.Entities.SelectableQuestionChoice", "ParentChoice")
+                        .WithMany()
+                        .HasForeignKey("ParentChoiceId")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("PMS.Entities.Question", "ParentQuestion")
-                        .WithMany("DependentQuestions")
+                        .WithMany()
                         .HasForeignKey("ParentQuestionId")
                         .OnDelete(DeleteBehavior.NoAction);
 
@@ -298,80 +273,42 @@ namespace PMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ParentOption");
+                    b.Navigation("ParentChoice");
 
                     b.Navigation("ParentQuestion");
 
                     b.Navigation("Questionnaire");
                 });
 
-            modelBuilder.Entity("PMS.Entities.QuestionOption", b =>
-                {
-                    b.HasOne("PMS.Entities.Question", "Question")
-                        .WithMany("Options")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
             modelBuilder.Entity("PMS.Entities.QuestionResponse", b =>
                 {
-                    b.HasOne("PMS.Entities.Participant", "Participant")
-                        .WithMany("Responses")
-                        .HasForeignKey("ParticipantId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("PMS.Entities.Question", "Question")
-                        .WithMany("Responses")
+                        .WithMany()
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("PMS.Entities.QuestionnaireAssignment", "QuestionnaireAssignment")
-                        .WithMany("Responses")
+                        .WithMany()
                         .HasForeignKey("QuestionnaireAssignmentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("Participant");
 
                     b.Navigation("Question");
 
                     b.Navigation("QuestionnaireAssignment");
                 });
 
-            modelBuilder.Entity("PMS.Entities.QuestionResponseOption", b =>
-                {
-                    b.HasOne("PMS.Entities.QuestionOption", "QuestionOption")
-                        .WithMany("ResponseOptions")
-                        .HasForeignKey("QuestionOptionId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("PMS.Entities.QuestionResponse", "QuestionResponse")
-                        .WithMany("SelectedOptions")
-                        .HasForeignKey("QuestionResponseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("QuestionOption");
-
-                    b.Navigation("QuestionResponse");
-                });
-
             modelBuilder.Entity("PMS.Entities.QuestionnaireAssignment", b =>
                 {
                     b.HasOne("PMS.Entities.Participant", "Participant")
-                        .WithMany("Assignments")
+                        .WithMany()
                         .HasForeignKey("ParticipantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PMS.Entities.Questionnaire", "Questionnaire")
-                        .WithMany("Assignments")
+                        .WithMany()
                         .HasForeignKey("QuestionnaireId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -381,44 +318,25 @@ namespace PMS.Migrations
                     b.Navigation("Questionnaire");
                 });
 
-            modelBuilder.Entity("PMS.Entities.Participant", b =>
+            modelBuilder.Entity("PMS.Entities.SelectableQuestionChoice", b =>
                 {
-                    b.Navigation("Assignments");
+                    b.HasOne("PMS.Entities.Question", "Question")
+                        .WithMany("Choices")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Responses");
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("PMS.Entities.Question", b =>
                 {
-                    b.Navigation("DependentQuestions");
-
-                    b.Navigation("Options");
-
-                    b.Navigation("Responses");
-                });
-
-            modelBuilder.Entity("PMS.Entities.QuestionOption", b =>
-                {
-                    b.Navigation("DependentQuestions");
-
-                    b.Navigation("ResponseOptions");
-                });
-
-            modelBuilder.Entity("PMS.Entities.QuestionResponse", b =>
-                {
-                    b.Navigation("SelectedOptions");
+                    b.Navigation("Choices");
                 });
 
             modelBuilder.Entity("PMS.Entities.Questionnaire", b =>
                 {
-                    b.Navigation("Assignments");
-
                     b.Navigation("Questions");
-                });
-
-            modelBuilder.Entity("PMS.Entities.QuestionnaireAssignment", b =>
-                {
-                    b.Navigation("Responses");
                 });
 #pragma warning restore 612, 618
         }

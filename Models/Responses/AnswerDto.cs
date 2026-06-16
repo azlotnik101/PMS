@@ -14,5 +14,5 @@ public class QuestionAnswerDto
 
     public DateTime AnsweredDate { get; set; }
 
-    public List<int> SelectedQuestionOptionIds { get; set; } = [];
+    public List<int> SelectedQuestionChoiceIds { get; set; } = [];
 }

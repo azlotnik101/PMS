@@ -15,7 +15,7 @@ public class AuditLogService(PmsDbContext dbContext) : IAuditLogService
             .OrderByDescending(auditLog => auditLog.CreatedDate)
             .ToListAsync(cancellationToken);
 
-        return auditLogs.Select(ToResponse).ToList();
+        return [.. auditLogs.Select(ToResponse)];
     }
 
     public async Task WriteAsync(string entityName, int entityId, string action, string? details = null, CancellationToken cancellationToken = default)

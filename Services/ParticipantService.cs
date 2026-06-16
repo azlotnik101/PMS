@@ -17,7 +17,7 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
             .ThenBy(participant => participant.FirstName)
             .ToListAsync(cancellationToken);
 
-        return participants.Select(ToResponse).ToList();
+        return [.. participants.Select(ToResponse)];
     }
 
     public async Task<ParticipantDto?> GetByIdAsync(int participantId, CancellationToken cancellationToken = default)
@@ -31,15 +31,8 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
 
     public async Task<ParticipantDto> CreateAsync(ParticipantCreateRequest request, CancellationToken cancellationToken = default)
     {
-        var participant = new Participant
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            EmailAddress = request.EmailAddress,
-            DateOfBirth = request.DateOfBirth,
-            ParticipantCode = request.ParticipantCode,
-            StartDate = request.StartDate
-        };
+        var participant = new Participant();
+        ApplyRequest(participant, request);
 
         dbContext.Participants.Add(participant);
         await dbContext.SaveChangesAsync(cancellationToken);
@@ -56,12 +49,7 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
             return null;
         }
 
-        participant.FirstName = request.FirstName;
-        participant.LastName = request.LastName;
-        participant.EmailAddress = request.EmailAddress;
-        participant.DateOfBirth = request.DateOfBirth;
-        participant.ParticipantCode = request.ParticipantCode;
-        participant.StartDate = request.StartDate;
+        ApplyRequest(participant, request);
 
         await dbContext.SaveChangesAsync(cancellationToken);
         await auditLogService.WriteAsync(nameof(Participant), participant.ParticipantId, "Updated", cancellationToken: cancellationToken);
@@ -80,6 +68,16 @@ public class ParticipantService(PmsDbContext dbContext, IAuditLogService auditLo
         dbContext.Participants.Remove(participant);
         await dbContext.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    private static void ApplyRequest(Participant participant, ParticipantCreateRequest request)
+    {
+        participant.FirstName = request.FirstName;
+        participant.LastName = request.LastName;
+        participant.EmailAddress = request.EmailAddress;
+        participant.DateOfBirth = request.DateOfBirth;
+        participant.ParticipantCode = request.ParticipantCode;
+        participant.StartDate = request.StartDate;
     }
 
     private static ParticipantDto ToResponse(Participant participant)

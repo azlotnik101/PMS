@@ -25,18 +25,18 @@ public class QuestionDto
 
     public int? ParentQuestionId { get; set; }
 
-    public int? ParentOptionId { get; set; }
+    public int? ParentChoiceId { get; set; }
 
-    public List<QuestionOptionDto> Options { get; set; } = [];
+    public List<SelectableQuestionChoiceDto> Choices { get; set; } = [];
 }
 
-public class QuestionOptionDto
+public class SelectableQuestionChoiceDto
 {
-    public int QuestionOptionId { get; set; }
+    public int SelectableQuestionChoiceId { get; set; }
 
     public int QuestionId { get; set; }
 
-    public string OptionText { get; set; } = null!;
+    public string ChoiceText { get; set; } = null!;
 
     public int DisplayOrder { get; set; }
 }
